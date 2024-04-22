@@ -133,7 +133,33 @@ class World:
 
 def draw_frame():
     pass
-    
+
+def choose_plr_screen():
+    run = True
+    player_option = 'blue'
+    while run:
+        screen.fill((255,255,255))
+
+        blue_btn = Button('blue_plr_btn', 240, 200)
+        red_btn = Button('red_plr_btn', 570, 200)
+
+        play_btn = Button('play_btn', 360, 550)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+
+            if event.type == pygame.MOUSEBUTTONDOWN and blue_btn.clicked():
+                player_option = 'blue'
+            if event.type == pygame.MOUSEBUTTONDOWN and red_btn.clicked():
+                    player_option = 'red'
+            if event.type == pygame.MOUSEBUTTONDOWN and play_btn.clicked():
+                play_screen(player_option)
+        pygame.display.update()
+
+    pygame.quit()
+
+    player_option = choose_plr_screen()    
 
 def start_screen(player_option):
     run = True
