@@ -87,6 +87,7 @@ class World:
         dirt = pygame.image.load('img/dirt1.png')
         border = pygame.image.load('img/border.png')
         spike1 = pygame.image.load('img/spike1.png')
+        lava = pygame.image.load('img/lava.png')
 
         row_count = 0
         for row in level:
@@ -115,6 +116,21 @@ class World:
                     img_rect.y = row_count * tile_size
                     tile = (img, img_rect, 1, 'border')
                     self.tiles.append(tile)
+                elif tile_type == 4:
+                    img = pygame.transform.scale(spike1, (50, 50))
+                    img_rect = img.get_rect()
+                    img_rect.x = col_count * tile_size
+                    img_rect.y = row_count * tile_size
+                    tile = (img, img_rect, 'spike')
+                    self.tiles.append(tile)
+                elif tile_type == 5:
+                    img = pygame.transform.scale(lava, (50, 50))
+                    img_rect = img.get_rect()
+                    img_rect.x = col_count * tile_size
+                    img_rect.y = row_count * tile_size
+                    tile = (img, img_rect, 'lava')
+                    self.tiles.append(tile)
+                    
 
                 col_count+=1
             row_count+=1
