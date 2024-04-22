@@ -115,13 +115,6 @@ class World:
                     img_rect.y = row_count * tile_size
                     tile = (img, img_rect, 1, 'border')
                     self.tiles.append(tile)
-                elif tile_type == 4:
-                    img = pygame.transform.scale(spike1, (50, 50))
-                    img_rect = img.get_rect()
-                    img_rect.x = col_count * tile_size
-                    img_rect.y = row_count * tile_size
-                    tile = (img, img_rect, 2, 'trap')
-                    self.tiles.append(tile)
 
                 col_count+=1
             row_count+=1
