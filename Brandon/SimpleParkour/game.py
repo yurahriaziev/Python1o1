@@ -27,8 +27,9 @@ class Button:
         return clicked
     
 class Player:
-    def __init__(self, player_look, x, y, level):
+    def __init__(self, player_look, x, y, level, health):
         self.level = level
+        self.health = health
 
         if player_look == 'blue':
             image = 'blue_plr'
@@ -79,6 +80,16 @@ class Player:
         self.rect.x += self.dx
         self.rect.y += self.dy
         screen.blit(self.img, (self.rect.x - offset_x, self.rect.y))
+        self.draw_health(self.health)
+
+
+    def draw_health(self, health):
+        outline = pygame.Rect(35, 35, 320, 30)
+        pygame.draw.rect(screen, 'black', outline, border_radius=5)
+
+        health = pygame.Rect(45, 40, 60*health, 20)
+        pygame.draw.rect(screen, 'green', health, border_radius=5)
+        
 
 class World:
     def __init__(self, level):
@@ -198,7 +209,7 @@ def play_screen(player_option):
 
     level1 = World(level1_data)
 
-    player = Player(player_option, 200, 500, level1)
+    player = Player(player_option, 200, 500, level1, 5)
 
     offset_x = 0
     scroll_area_width = 200
