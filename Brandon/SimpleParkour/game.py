@@ -37,7 +37,7 @@ class Player:
             image = 'red_plr'
 
         self.img = pygame.image.load(f"img/{image}.png")
-        self.img = pygame.transform.scale(self.img, (120, 170))
+        self.img = pygame.transform.scale(self.img, (60, 100))
         self.rect = self.img.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -67,20 +67,26 @@ class Player:
 
         # collisions
         for tile in self.level.tiles:
-            if tile[1].colliderect(self.rect.x, self.rect.y+self.dy, self.width, self.height):
-                if tile[2] == 1:
-                    if self.y_vel >= 0:
-                        self.dy = tile[1].top - self.rect.bottom
-                        self.jumped = False
-            if tile[1].colliderect(self.rect.x+self.dx, self.rect.y, self.width, self.height):
-                if tile[2] == 1:
-                    self.dx = 0
-                # if tile[3[]]
+                if tile[1].colliderect(self.rect.x, self.rect.y+self.dy, self.width, self.height):
+                    if tile[2] == 1:
+                        if self.y_vel >= 0:
+                            self.dy = tile[1].top - self.rect.bottom
+                            self.jumped = False
+                if tile[1].colliderect(self.rect.x+self.dx, self.rect.y, self.width, self.height):
+                    if tile[2] == 1:
+                        self.dx = 0
+                    if tile[2] == 2:
+                        if tile[3] == 'spike':
+                            self.rect.x -= 80
+                            self.health -= 1
 
         self.rect.x += self.dx
         self.rect.y += self.dy
         screen.blit(self.img, (self.rect.x - offset_x, self.rect.y))
-        self.draw_health(self.health)
+        if self.health >= 0:
+            self.draw_health(self.health)
+
+        pygame.draw.rect(screen, 'black', self.rect, 5)
 
 
     def draw_health(self, health):
@@ -132,14 +138,14 @@ class World:
                     img_rect = img.get_rect()
                     img_rect.x = col_count * tile_size
                     img_rect.y = row_count * tile_size
-                    tile = (img, img_rect, 'spike')
+                    tile = (img, img_rect, 2, 'spike')
                     self.tiles.append(tile)
                 elif tile_type == 5:
                     img = pygame.transform.scale(lava, (50, 50))
                     img_rect = img.get_rect()
                     img_rect.x = col_count * tile_size
                     img_rect.y = row_count * tile_size
-                    tile = (img, img_rect, 'lava')
+                    tile = (img, img_rect, 2, 'lava')
                     self.tiles.append(tile)
                     
 
@@ -225,6 +231,7 @@ def play_screen(player_option):
         player.update(offset_x)
 
         if ((player.rect.right - offset_x >= s_w - scroll_area_width) and player.dx > 0) or ((player.rect.left - offset_x <= scroll_area_width) and player.dx < 0):
+            
             offset_x += player.dx
 
         key = pygame.key.get_pressed()
@@ -238,6 +245,11 @@ def play_screen(player_option):
         pygame.display.update()
 
     pygame.quit()
+
+def game_over_screen():
+    run = True
+    while run:
+        pass
     
 start_screen('blue')
     
