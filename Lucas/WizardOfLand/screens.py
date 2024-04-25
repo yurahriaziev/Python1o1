@@ -1,5 +1,5 @@
 from settings import *
-from classes import Button, World, Player, Weapon, Enemy
+from classes import Button, World, Player, Weapon, Enemy, Item
 from levels import LEVEL_1_DATA
 
 def play_screen(level):
@@ -12,10 +12,15 @@ def play_screen(level):
 
     wand1 = Weapon(400, 560, 'wand1', projectile_group)
 
-    player = Player(200, 200, 'white', level, wand1)
+    coin_group = pygame.sprite.Group()
+
+    player = Player(200, 200, 'white', level, wand1, coin_group)
 
     enemy = Enemy(800, 515, projectile_group)
     enemy_group.add(enemy)
+    for enemy in enemy_group:
+        coin = Item('Coin', None, None, enemy)
+        level.items.append(coin)
 
     run = True
     while run:
@@ -30,6 +35,7 @@ def play_screen(level):
         wand1.update(player)
 
         enemy_group.update()
+
 
         projectile_group.update()
         projectile_group.draw(SCREEN)
