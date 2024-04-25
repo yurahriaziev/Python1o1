@@ -47,12 +47,12 @@ class World:
                 if tile_type == 'R':
                     x = col_c * TILE_SIZE
                     y = row_c * TILE_SIZE+30
-                    item = Item(tile_type, x, y)
+                    item = Item(tile_type, x, y, None)
                     self.items.append(item)
                 if tile_type == 'B':
                     x = col_c * TILE_SIZE
                     y = row_c * TILE_SIZE+30
-                    item = Item(tile_type, x, y)
+                    item = Item(tile_type, x, y, None)
                     self.items.append(item)
 
                 col_c += 1
@@ -66,7 +66,7 @@ class World:
             item.draw()
 
 class Player:
-    def __init__(self, x, y, p_option, level, weapon):
+    def __init__(self, x, y, p_option, level, weapon, coins):
         self.level = level
         self.level_items = self.level.items
         self.weapon = weapon
@@ -84,6 +84,11 @@ class Player:
 
         # inventory
         self.inventory = Inventory()
+
+        self.coins = coins
+
+    def display_coin(self, coins):
+        pass
 
     def update(self):
         self.inventory.draw()
@@ -104,7 +109,7 @@ class Player:
             self.jumped = True
         if key[pygame.K_e] and self.weapon.picked_up:
             if self.shot_cooldown == 0:
-                self.shot_cooldown = 35
+                self.shot_cooldown = 30
                 self.weapon.shoot_wand()
 
         self.y_vel += 1
@@ -121,10 +126,16 @@ class Player:
                 dx = 0
 
         for item in self.level_items:
-            if self.rect.colliderect(item.rect):
-                self.inventory.current_item_list.append(item)
-                print(len(self.inventory.current_item_list))
-                self.inventory.add_item(item)
+            if item.type == 'B' or item.type == 'R':
+                if self.rect.colliderect(item.rect):
+                    self.inventory.current_item_list.append(item)
+                    print(len(self.inventory.current_item_list))
+                    self.inventory.add_item(item)
+            if item.type == 'Coin':
+                if self.rect.colliderect(item.coin.rect):
+                    self.coins.add(item.coin)
+                    item.coin.collected = True
+
 
         self.rect.x += dx
         self.rect.y += dy
@@ -159,16 +170,23 @@ class Inventory:
         item.rect.height = 80
 
 class Item:
-    def __init__(self, type, x, y):
-        if type == 'R':
+    def __init__(self, type, x, y, origin):
+        self.type = type
+        if self.type == 'R':
             self.color = (255, 0, 0)
-        if type == 'B':
+            self.rect = pygame.Rect(x, y, 20, 20)
+        if self.type == 'B':
             self.color = (0, 0, 255)
+            self.rect = pygame.Rect(x, y, 20, 20)
+        if self.type == 'Coin':
+            self.coin = Coin(enemy=origin)
 
-        self.rect = pygame.Rect(x, y, 20, 20)
 
     def draw(self):
-        pygame.draw.rect(SCREEN, self.color, self.rect)
+        if self.type == 'Coin':
+            self.coin.draw()
+        else:
+            pygame.draw.rect(SCREEN, self.color, self.rect)
 
 class Projectile(pygame.sprite.Sprite):
     def __init__(self, x, y, direction):
@@ -257,8 +275,20 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         self.update_health()
         SCREEN.blit(self.img, self.rect)
-        
 
+class Coin(pygame.sprite.Sprite):
+    def __init__(self, enemy):
+        # pygame.sprite.Sprite.__init__(self)
+        super(Coin, self).__init__()
+        self.enemy = enemy
+        self.img = pygame.transform.scale(pygame.image.load('img/coin.png'), (50, 50))
+        self.rect = self.img.get_rect()
+        self.rect.x = self.enemy.rect.x
+        self.rect.y = self.enemy.rect.y
+        self.collected = False
 
-
+    def draw(self):
+        if not self.collected:
+            if self.enemy.health == 0:
+                SCREEN.blit(self.img, self.rect)
 
