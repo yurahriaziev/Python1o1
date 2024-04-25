@@ -95,13 +95,20 @@ class World:
             row_c += 1
                 
         
-    def draw(self, offset_x, offset_y):
+    def draw(self):
+    # def draw(self, offset_x, offset_y):
         for tile in self.tiles:
-            screen.blit(tile[0], (tile[1].x - offset_x, tile[1].y - offset_y))
+            screen.blit(tile[0], (tile[1].x, tile[1].y))
         
         #
         for tile in self.top_tiles:
-            screen.blit(tile[0], (tile[1].x - offset_x, tile[1].y - offset_y))
+            screen.blit(tile[0], (tile[1].x, tile[1].y))
+        # for tile in self.tiles:
+        #     screen.blit(tile[0], (tile[1].x - offset_x, tile[1].y - offset_y))
+        
+        # #
+        # for tile in self.top_tiles:
+        #     screen.blit(tile[0], (tile[1].x - offset_x, tile[1].y - offset_y))
 
 class Player:
     def __init__(self, x_pos, y_pos, level):
@@ -127,7 +134,8 @@ class Player:
 
         self.wall_hitbox = pygame.Rect(self.rect.x+10, self.rect.y + 30, self.width-20, 35)
 
-    def update(self, offset_x, offset_y):
+    def update(self):
+    # def update(self, offset_x, offset_y):
         current_time = pygame.time.get_ticks()
         if current_time - self.last_update >= self.anim_cooldown:
             self.frame += 1
@@ -167,8 +175,9 @@ class Player:
         self.wall_hitbox.x += self.dx
         self.wall_hitbox.y += self.dy
         
-        screen.blit(self.idle_animation_list[self.frame], (self.rect.x - offset_x, self.rect.y - offset_y))
-        pygame.draw.rect(screen, 'white', (self.wall_hitbox.x-offset_x, self.wall_hitbox.y - offset_y, self.width-20, 35), 2)
+        screen.blit(self.idle_animation_list[self.frame], (self.rect.x, self.rect.y))
+        # screen.blit(self.idle_animation_list[self.frame], (self.rect.x - offset_x, self.rect.y - offset_y))
+        # pygame.draw.rect(screen, 'white', (self.wall_hitbox.x-offset_x, self.wall_hitbox.y - offset_y, self.width-20, 35), 2)
 
 class SpriteSheet:
     def __init__(self, image):
