@@ -12,25 +12,28 @@ def startscreen():
     level0 = World(lobby)
 
     plr = Player(300, 300, level0)
-    offset_x = 0
-    offset_y = 0
-    scroll_area_width = 130
+    # offset_x = 0
+    # offset_y = 0
+    # scroll_area_width = 130
 
     run = True
     while run:
         clock.tick(60)
         screen.blit(bg, (0,0))
 
-        level0.draw(offset_x, offset_y)
+        level0.draw()
 
-        plr.update(offset_x, offset_y)
+        plr.update()
+        # level0.draw(offset_x, offset_y)
 
-        # draw_grid()
+        # plr.update(offset_x, offset_y)
 
-        if ((plr.rect.right - offset_x >= screen_w - scroll_area_width) and plr.dx > 0) or ((plr.rect.left - offset_x <= scroll_area_width) and plr.dx < 0):
-            offset_x += plr.dx
-        if ((plr.rect.bottom - offset_y >= screen_h - scroll_area_width) and plr.dy > 0) or ((plr.rect.top - offset_y <= scroll_area_width) and plr.dy < 0):
-            offset_y += plr.dy
+        # # draw_grid()
+
+        # if ((plr.rect.right - offset_x >= screen_w - scroll_area_width) and plr.dx > 0) or ((plr.rect.left - offset_x <= scroll_area_width) and plr.dx < 0):
+        #     offset_x += plr.dx
+        # if ((plr.rect.bottom - offset_y >= screen_h - scroll_area_width) and plr.dy > 0) or ((plr.rect.top - offset_y <= scroll_area_width) and plr.dy < 0):
+        #     offset_y += plr.dy
         
 
         for event in pygame.event.get():
