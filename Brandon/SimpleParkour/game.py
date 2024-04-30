@@ -29,7 +29,8 @@ class Button:
 class Player:
     def __init__(self, player_look, x, y, level, health):
         self.level = level
-        self.health = health
+        self.health = health * 60
+        self.current_health = self.health
 
         if player_look == 'blue':
             image = 'blue_plr'
@@ -72,28 +73,41 @@ class Player:
                         if self.y_vel >= 0:
                             self.dy = tile[1].top - self.rect.bottom
                             self.jumped = False
+                    if tile[2] == 2:
+                        if tile[3] == 'spike':
+                            self.y_vel = -20
+                            self.current_health -= self.health * .05
+                            if self.dx > 0:
+                                self.rect.x -= 100
+                            if self.dx < 0:
+                                self.rect.x += 100
+
                 if tile[1].colliderect(self.rect.x+self.dx, self.rect.y, self.width, self.height):
                     if tile[2] == 1:
                         self.dx = 0
                     if tile[2] == 2:
                         if tile[3] == 'spike':
-                            self.rect.x -= 80
-                            self.health -= 1
+                            self.current_health -= self.health * .05
+                            if self.dx > 0:
+                                self.rect.x -= 100
+                            if self.dx < 0:
+                                self.rect.x += 100
 
         self.rect.x += self.dx
         self.rect.y += self.dy
         screen.blit(self.img, (self.rect.x - offset_x, self.rect.y))
         if self.health >= 0:
-            self.draw_health(self.health)
+            self.draw_health(self.current_health)
 
-        pygame.draw.rect(screen, 'black', self.rect, 5)
+        # pygame.draw.rect(screen, 'black', (self.rect.x, self.rect.y, self.width, self.height), 5)
 
 
     def draw_health(self, health):
         outline = pygame.Rect(35, 35, 320, 30)
         pygame.draw.rect(screen, 'black', outline, border_radius=5)
 
-        health = pygame.Rect(45, 40, 60*health, 20)
+        # health = pygame.Rect(45, 40, 60*health, 20)
+        health = pygame.Rect(45, 40, health, 20)
         pygame.draw.rect(screen, 'green', health, border_radius=5)
         
 
