@@ -160,9 +160,7 @@ class World:
                     img_rect.x = col_count * tile_size
                     img_rect.y = row_count * tile_size
                     tile = (img, img_rect, 2, 'lava')
-                    self.tiles.append(tile)
-                    
-
+                    self.tiles.append(tile)                
                 col_count+=1
             row_count+=1
 
