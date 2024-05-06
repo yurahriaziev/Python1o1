@@ -26,16 +26,20 @@ def startscreen():
         plr.update(offset_x, offset_y)
 
         # draw_grid()
+        max_offset_x = max(17*75-screen_w, 0)
+        max_offset_y = max(17*75-screen_h, 0)
 
-        if ((plr.rect.right - offset_x >= screen_w - scroll_area_width) and plr.dx > 0) or ((plr.rect.left - offset_x <= scroll_area_width) and plr.dx < 0):
+        if ((plr.rect.right - offset_x >= screen_w - scroll_area_width) and plr.dx > 0) and (offset_x < max_offset_x):
             offset_x += plr.dx
-        if ((plr.rect.bottom - offset_y >= screen_h - scroll_area_width) and plr.dy > 0) or ((plr.rect.top - offset_y <= scroll_area_width) and plr.dy < 0):
+        if ((plr.rect.left - offset_x <= scroll_area_width) and plr.dx < 0) and (offset_x > 0):
+            offset_x += plr.dx
+        if ((plr.rect.bottom - offset_y >= screen_h - scroll_area_width) and plr.dy > 0) and (offset_y < max_offset_y):
             offset_y += plr.dy
-        
+        if ((plr.rect.top - offset_y <= scroll_area_width) and plr.dy < 0) and (offset_y > 0):
+            offset_y += plr.dy
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-
         pygame.display.update()
     pygame.quit()
