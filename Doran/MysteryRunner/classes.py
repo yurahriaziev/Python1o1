@@ -15,7 +15,10 @@ class World:
         #
         self.top_tiles = []
         row_c = 0
-        for row in level_data:
+
+        self.finish_x = None
+
+        for row in level_data[0]:
             col_c = 0
             for tiletype in row:
                 tilefound = False
@@ -94,7 +97,22 @@ class World:
                 col_c += 1
             row_c += 1
                 
-        
+        row_c2 = 0
+        for row in level_data[1]:
+            col_c2 = 0
+            for tile in row:
+                if tile == 1:
+                    img = pygame.transform.scale(pygame.image.load('img/start_level_text_lobby1.png'), (130, 50))
+                    tile_rect = img.get_rect()
+                    tile_rect.x = tile_size * col_c2
+                    tile_rect.y = tile_size * row_c2 + 25
+                    tile = (img, tile_rect)
+                    self.top_tiles.append(tile)
+                if tile == 'F':
+                    self.finish_x = col_c2 * tile_size
+                col_c2 += 1
+            row_c2 += 1
+
     def draw(self, offset_x, offset_y):
         for tile in self.tiles:
             screen.blit(tile[0], (tile[1].x - offset_x, tile[1].y - offset_y))
@@ -113,6 +131,8 @@ class Player:
         self.last_update = pygame.time.get_ticks()
         self.anim_cooldown = 200
         self.frame = 0
+
+        self.current_level = 0
 
         for x in range(self.animation_steps):
             self.idle_animation_list.append(self.sprite_sheet.get_image(x, 64, 64))
