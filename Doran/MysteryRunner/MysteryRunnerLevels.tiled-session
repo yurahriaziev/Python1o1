@@ -1,0 +1,47 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "level1.tmx",
+    "expandedProjectPaths": [
+    ],
+    "fileStates": {
+        "level1.tmx": {
+            "scale": 1.6142,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 320.9019947961839,
+                "y": 175.31904348903484
+            }
+        },
+        "props.tsx": {
+            "scaleInDock": 3.3323,
+            "scaleInEditor": 1
+        },
+        "tileset.tsx": {
+            "scaleInDock": 2.7872,
+            "scaleInEditor": 1
+        }
+    },
+    "last.imagePath": "/Users/yuriihriaziev/Documents/Python1o1/Doran/MysteryRunner/img",
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "openFiles": [
+        "level1.tmx",
+        "tileset.tsx",
+        "props.tsx"
+    ],
+    "project": "MysteryRunnerLevels.tiled-project",
+    "recentFiles": [
+        "props.tsx",
+        "tileset.tsx",
+        "level1.tmx"
+    ],
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}
