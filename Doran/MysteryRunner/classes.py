@@ -8,7 +8,7 @@ class Button:
         self.rect.y = y
         screen.blit(self.img, self.rect)
 class World:
-    def __init__(self, level_data):
+    def __init__(self, level_data, level_count):
         self.camera_x_offset = 200
         self.camera_y_offset = 70
         self.tiles = []
@@ -16,110 +16,124 @@ class World:
         self.top_tiles = []
         row_c = 0
 
-        self.finish_x = None
+        self.tile_group = pygame.sprite.Group()
 
-        for row in level_data[0]:
-            col_c = 0
-            for tiletype in row:
-                tilefound = False
-                if tiletype == 41:
-                    img = pygame.transform.scale(wood_f, (tile_size, tile_size))
-                    marker = 1
-                    tilefound = True
-                if tiletype == 52:
-                    img = pygame.transform.scale(front_w, (tile_size, tile_size*3))
-                    marker = 2
-                    tilefound = True
-                if tiletype == 129:
-                    # make left side wall
-                    img = pygame.transform.scale(left_w, (tile_size, tile_size))
-                    marker = 2
-                    tilefound = True
-                if tiletype == 130:
-                    # make right side wall
-                    img = pygame.transform.scale(right_w, (tile_size, tile_size))
-                    marker = 2
-                    tilefound = True
-                if tiletype == 77:
-                    # make back wall
-                    img = pygame.transform.scale(back_w, (tile_size, tile_size))
-                    marker = 2
-                    tilefound = True
-                if tiletype == 104:
-                    # make outer top left wall corner
-                    img = pygame.transform.scale(outer_top_left, (tile_size, tile_size))
-                    marker = 2
-                    tilefound = True
-                if tiletype == 105:
-                    # make outer top right wall corner
-                    img = pygame.transform.scale(outer_top_right, (tile_size, tile_size))
-                    marker = 2
-                    tilefound = True
-                if tiletype == 154:
-                    # make outer bottom left wall corner
-                    img = pygame.transform.scale(outer_bottom_left, (tile_size, tile_size))
-                    marker = 2
-                    tilefound = True
-                if tiletype == 155:
-                    # make outer bottom right wall corner
-                    img = pygame.transform.scale(outer_bottom_right, (tile_size, tile_size))
-                    marker = 2
-                    tilefound = True
-                if tiletype == 78:
-                    # make inner bottom left wall corner
-                    img = pygame.transform.scale(inner_bottom_left, (tile_size, tile_size))
-                    marker = 2
-                    tilefound = True
-                if tiletype == 76:
-                    # make inner bottom right wall corner
-                    img = pygame.transform.scale(inner_bottom_right, (tile_size, tile_size))
-                    marker = 2
-                    tilefound = True
-                if tiletype == 101:
-                    # make inner top right wall corner
-                    img = pygame.transform.scale(inner_top_right, (tile_size, tile_size))
-                    marker = 2
-                    tilefound = True
-                
-                if tilefound:
-                    tile_rect = img.get_rect()
+        self.level_count = level_count
+        self.finish_x = None
+        if self.level_count == 0:
+            for row in level_data[0]:
+                col_c = 0
+                for tiletype in row:
+                    tilefound = False
+                    if tiletype == 41:
+                        img = pygame.transform.scale(wood_f, (tile_size, tile_size))
+                        marker = 1
+                        tilefound = True
                     if tiletype == 52:
-                        tile_rect.x = col_c * tile_size - self.camera_x_offset
-                        tile_rect.y = row_c * tile_size - tile_size*2 - self.camera_y_offset
-                    else:
-                        tile_rect.x = col_c * tile_size - self.camera_x_offset
-                        tile_rect.y = row_c * tile_size - self.camera_y_offset
-                    tile = (img, tile_rect, marker)
+                        img = pygame.transform.scale(front_w, (tile_size, tile_size*3))
+                        marker = 2
+                        tilefound = True
+                    if tiletype == 129:
+                        # make left side wall
+                        img = pygame.transform.scale(left_w, (tile_size, tile_size))
+                        marker = 2
+                        tilefound = True
+                    if tiletype == 130:
+                        # make right side wall
+                        img = pygame.transform.scale(right_w, (tile_size, tile_size))
+                        marker = 2
+                        tilefound = True
+                    if tiletype == 77:
+                        # make back wall
+                        img = pygame.transform.scale(back_w, (tile_size, tile_size))
+                        marker = 2
+                        tilefound = True
+                    if tiletype == 104:
+                        # make outer top left wall corner
+                        img = pygame.transform.scale(outer_top_left, (tile_size, tile_size))
+                        marker = 2
+                        tilefound = True
+                    if tiletype == 105:
+                        # make outer top right wall corner
+                        img = pygame.transform.scale(outer_top_right, (tile_size, tile_size))
+                        marker = 2
+                        tilefound = True
+                    if tiletype == 154:
+                        # make outer bottom left wall corner
+                        img = pygame.transform.scale(outer_bottom_left, (tile_size, tile_size))
+                        marker = 2
+                        tilefound = True
+                    if tiletype == 155:
+                        # make outer bottom right wall corner
+                        img = pygame.transform.scale(outer_bottom_right, (tile_size, tile_size))
+                        marker = 2
+                        tilefound = True
+                    if tiletype == 78:
+                        # make inner bottom left wall corner
+                        img = pygame.transform.scale(inner_bottom_left, (tile_size, tile_size))
+                        marker = 2
+                        tilefound = True
+                    if tiletype == 76:
+                        # make inner bottom right wall corner
+                        img = pygame.transform.scale(inner_bottom_right, (tile_size, tile_size))
+                        marker = 2
+                        tilefound = True
                     if tiletype == 101:
+                        # make inner top right wall corner
+                        img = pygame.transform.scale(inner_top_right, (tile_size, tile_size))
+                        marker = 2
+                        tilefound = True
+                    
+                    if tilefound:
+                        tile_rect = img.get_rect()
+                        if tiletype == 52:
+                            tile_rect.x = col_c * tile_size - self.camera_x_offset
+                            tile_rect.y = row_c * tile_size - tile_size*2 - self.camera_y_offset
+                        else:
+                            tile_rect.x = col_c * tile_size - self.camera_x_offset
+                            tile_rect.y = row_c * tile_size - self.camera_y_offset
+                        tile = (img, tile_rect, marker)
+                        if tiletype == 101:
+                            self.top_tiles.append(tile)
+                        else:
+                            self.tiles.append(tile)
+                    col_c += 1
+                row_c += 1
+            row_c2 = 0
+            for row in level_data[1]:
+                col_c2 = 0
+                for tile in row:
+                    if tile == 1:
+                        img = pygame.transform.scale(pygame.image.load('img/start_level_text_lobby1.png'), (130, 50))
+                        tile_rect = img.get_rect()
+                        tile_rect.x = tile_size * col_c2
+                        tile_rect.y = tile_size * row_c2 + 25
+                        tile = (img, tile_rect)
                         self.top_tiles.append(tile)
-                    else:
+                    if tile == 'F':
+                        self.finish_x = col_c2 * tile_size
+                    col_c2 += 1
+                row_c2 += 1
+        else:
+            for layer in level_data.layers:
+                if hasattr(layer, 'data'):
+                    for x, y, surf in layer.tiles():
+                        pos = (x*75,y*75-200)
+                        surf = pygame.transform.scale(surf, (75, 75))
+                        tile = Tile(pos, surf, self.tile_group)
                         self.tiles.append(tile)
-                col_c += 1
-            row_c += 1
                 
-        row_c2 = 0
-        for row in level_data[1]:
-            col_c2 = 0
-            for tile in row:
-                if tile == 1:
-                    img = pygame.transform.scale(pygame.image.load('img/start_level_text_lobby1.png'), (130, 50))
-                    tile_rect = img.get_rect()
-                    tile_rect.x = tile_size * col_c2
-                    tile_rect.y = tile_size * row_c2 + 25
-                    tile = (img, tile_rect)
-                    self.top_tiles.append(tile)
-                if tile == 'F':
-                    self.finish_x = col_c2 * tile_size
-                col_c2 += 1
-            row_c2 += 1
 
     def draw(self, offset_x, offset_y):
-        for tile in self.tiles:
-            screen.blit(tile[0], (tile[1].x - offset_x, tile[1].y - offset_y))
-        
-        
-        for tile in self.top_tiles:
-            screen.blit(tile[0], (tile[1].x - offset_x, tile[1].y - offset_y))
+        if self.level_count == 0:
+            for tile in self.tiles:
+                screen.blit(tile[0], (tile[1].x - offset_x, tile[1].y - offset_y))
+            
+            for tile in self.top_tiles:
+                screen.blit(tile[0], (tile[1].x - offset_x, tile[1].y - offset_y))
+        else:
+            for tile in self.tiles:
+                screen.blit(tile.image, (tile.rect.x, tile.rect.y+100))
 
 class Player:
     def __init__(self, x_pos, y_pos, level):
@@ -200,3 +214,9 @@ class SpriteSheet:
         self.image.set_colorkey((0,0,0))
 
         return self.image
+    
+class Tile(pygame.sprite.Sprite):
+    def __init__(self, pos, surf, groups):
+        super().__init__(groups)
+        self.image = surf
+        self.rect = self.image.get_rect(topleft = pos)

@@ -1,4 +1,5 @@
 import pygame
+from pytmx.util_pygame import load_pygame
 screen_w = 900
 screen_h = 700
 # screen_w = 500
@@ -27,3 +28,7 @@ outer_bottom_right = pygame.image.load('img/corners/out-bottom-r-corner.png')
 inner_bottom_left = pygame.image.load('img/corners/inner-bottom-l-corner.png')
 inner_bottom_right = pygame.image.load('img/corners/inner-bottom-r-corner.png')
 inner_top_right = pygame.image.load('img/corners/inner-top-r-corner.png')
+
+level1 = load_pygame('level1.tmx')
+
+levels = [level1]

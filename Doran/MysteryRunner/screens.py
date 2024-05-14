@@ -9,7 +9,7 @@ def draw_grid():
 
 def startscreen():
     clock = pygame.time.Clock()
-    level0 = World(lobby)
+    level0 = World(lobby, 0)
 
     plr = Player(300, 300, level0)
     offset_x = 0
@@ -38,8 +38,38 @@ def startscreen():
         if ((plr.rect.top - offset_y <= scroll_area_width) and plr.dy < 0) and (offset_y > 0):
             offset_y += plr.dy
 
+        # move player to next level
+        if plr.rect.x > level0.finish_x:
+            print(plr.current_level)
+            load_level(plr, )
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
         pygame.display.update()
     pygame.quit()
+
+
+def load_level(plr):
+    level_data = levels[plr.current_level]
+
+    plr.current_level += 1
+    level = World(level_data, plr.current_level)
+
+    plr.rect.x = 100
+    plr.rect.y = 100
+    run = True
+    while run:
+        screen.blit(bg, (0,0))
+
+        level.draw(None, None)
+
+        plr.update(0,0)
+
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
+        pygame.display.update()
+    pygame.quit()
+
+
