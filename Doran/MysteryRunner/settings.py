@@ -2,8 +2,8 @@ import pygame
 from pytmx.util_pygame import load_pygame
 screen_w = 900
 screen_h = 700
-# screen_w = 500
-# screen_h = 400
+# screen_w = 1500
+# screen_h = 1000
 screen = pygame.display.set_mode((screen_w, screen_h))
 
 bg = pygame.transform.scale(pygame.image.load('img/void.png'), (screen_w, screen_h))
@@ -30,5 +30,11 @@ inner_bottom_right = pygame.image.load('img/corners/inner-bottom-r-corner.png')
 inner_top_right = pygame.image.load('img/corners/inner-top-r-corner.png')
 
 level1 = load_pygame('level1.tmx')
+layers = level1.layers
+walls = level1.get_layer_by_name('walls')
+if __name__ == "__main__":
+    for i in layers:
+        print(i)
+    print(walls.name)
 
 levels = [level1]
