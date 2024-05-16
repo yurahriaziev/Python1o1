@@ -41,7 +41,9 @@ def startscreen():
         # move player to next level
         if plr.rect.x > level0.finish_x:
             print(plr.current_level)
-            load_level(plr, )
+            level0.tiles = []
+            level0.top_tiles = []
+            load_level(plr)
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -51,20 +53,45 @@ def startscreen():
 
 
 def load_level(plr):
+    clock = pygame.time.Clock()
     level_data = levels[plr.current_level]
 
     plr.current_level += 1
     level = World(level_data, plr.current_level)
+    plr.level = level
+    print(level.level_count)
 
     plr.rect.x = 100
-    plr.rect.y = 100
+    plr.rect.y = 300
+    plr.wall_hitbox.x = plr.rect.x + 10
+    plr.wall_hitbox.y = plr.rect.y + 30
+
+    # camera vars
+    offset_x = 0
+    offset_y = 0
+    scroll_area_width = 130
+
     run = True
     while run:
+        clock.tick(60)
         screen.blit(bg, (0,0))
 
-        level.draw(None, None)
+        level.draw(offset_x, offset_y)
 
-        plr.update(0,0)
+        plr.update(offset_x, offset_y)
+
+        # camera movement
+        max_offset_x = max(50*75-screen_w, 0)
+        max_offset_y = max(30*75-screen_h, 0)
+
+        if ((plr.rect.right - offset_x >= screen_w - scroll_area_width) and plr.dx > 0) and (offset_x < max_offset_x):
+            offset_x += plr.dx
+        if ((plr.rect.left - offset_x <= scroll_area_width) and plr.dx < 0) and (offset_x > 0):
+            offset_x += plr.dx
+        if ((plr.rect.bottom - offset_y >= screen_h - scroll_area_width) and plr.dy > 0) and (offset_y < max_offset_y):
+            offset_y += plr.dy
+        if ((plr.rect.top - offset_y <= scroll_area_width) and plr.dy < 0) and (offset_y > 0):
+            offset_y += plr.dy
 
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
