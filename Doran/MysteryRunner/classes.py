@@ -7,6 +7,7 @@ class Button:
         self.rect.x = x
         self.rect.y = y
         screen.blit(self.img, self.rect)
+
 class World:
     def __init__(self, level_data, level_count):
         self.camera_x_offset = 200
@@ -118,9 +119,9 @@ class World:
             for layer in level_data.layers:
                 if hasattr(layer, 'data'):
                     for x, y, surf in layer.tiles():
-                        pos = (x*75,y*75-200)
+                        pos = (x*75,y*75+20)
                         surf = pygame.transform.scale(surf, (75, 75))
-                        tile = Tile(pos, surf, self.tile_group)
+                        tile = Tile(pos, surf, self.tile_group, layer.name)
                         self.tiles.append(tile)
                 
 
@@ -133,7 +134,7 @@ class World:
                 screen.blit(tile[0], (tile[1].x - offset_x, tile[1].y - offset_y))
         else:
             for tile in self.tiles:
-                screen.blit(tile.image, (tile.rect.x, tile.rect.y+100))
+                screen.blit(tile.image, (tile.rect.x - offset_x, tile.rect.y - offset_y))
 
 class Player:
     def __init__(self, x_pos, y_pos, level):
@@ -188,13 +189,23 @@ class Player:
 
         # collisions with walls
         # wall tile has marker of 2 in the tile tuple in world.tiles
+        
         for tile in self.level.tiles:
-            if tile[2] == 2:
-                tile_rect = tile[1]
-                if tile_rect.colliderect(self.wall_hitbox.x, self.wall_hitbox.y+self.dy, self.width-20, 35):
-                    self.dy = 0
-                if tile_rect.colliderect(self.wall_hitbox.x+self.dx, self.wall_hitbox.y, self.width-20, 35):
-                    self.dx = 0
+            if self.level.level_count == 0:
+                if tile[2] == 2:
+                    tile_rect = tile[1]
+                    if tile_rect.colliderect(self.wall_hitbox.x, self.wall_hitbox.y+self.dy, self.width-20, 35):
+                        self.dy = 0
+                    if tile_rect.colliderect(self.wall_hitbox.x+self.dx, self.wall_hitbox.y, self.width-20, 35):
+                        self.dx = 0
+            else:
+                if tile.name == 'walls':
+                    tile_rect = tile.rect
+                    # pygame.draw.rect(screen, 'white', tile.rect, 2)
+                    if tile_rect.colliderect(self.wall_hitbox.x, self.wall_hitbox.y+self.dy, self.width-20, 35):
+                        self.dy = 0
+                    if tile_rect.colliderect(self.wall_hitbox.x+self.dx, self.wall_hitbox.y, self.width-20, 35):
+                        self.dx = 0
         
         self.rect.x += self.dx
         self.rect.y += self.dy
@@ -216,7 +227,8 @@ class SpriteSheet:
         return self.image
     
 class Tile(pygame.sprite.Sprite):
-    def __init__(self, pos, surf, groups):
+    def __init__(self, pos, surf, groups, name):
         super().__init__(groups)
+        self.name = name
         self.image = surf
         self.rect = self.image.get_rect(topleft = pos)
