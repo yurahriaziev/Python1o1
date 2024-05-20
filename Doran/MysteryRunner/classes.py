@@ -21,6 +21,9 @@ class World:
 
         self.level_count = level_count
         self.finish_x = None
+
+        self.coins = pygame.sprite.Group()
+
         if self.level_count == 0:
             for row in level_data[0]:
                 col_c = 0
@@ -121,8 +124,13 @@ class World:
                     for x, y, surf in layer.tiles():
                         pos = (x*75,y*75+20)
                         surf = pygame.transform.scale(surf, (75, 75))
-                        tile = Tile(pos, surf, self.tile_group, layer.name)
-                        self.tiles.append(tile)
+                            
+                        if layer.name == 'coins':
+                            coin = Coin(pos, surf, self.coins, layer.name)
+                            self.coins.add(coin)
+                        else:
+                            tile = Tile(pos, surf, self.tile_group, layer.name)
+                            self.tiles.append(tile)
                 
 
     def draw(self, offset_x, offset_y):
@@ -135,6 +143,8 @@ class World:
         else:
             for tile in self.tiles:
                 screen.blit(tile.image, (tile.rect.x - offset_x, tile.rect.y - offset_y))
+            
+            self.coins.update(offset_x, offset_y)
 
 class Player:
     def __init__(self, x_pos, y_pos, level):
@@ -148,6 +158,8 @@ class Player:
         self.frame = 0
 
         self.current_level = 0
+
+        self.current_coins_amount = 0
 
         for x in range(self.animation_steps):
             self.idle_animation_list.append(self.sprite_sheet.get_image(x, 64, 64))
@@ -206,6 +218,13 @@ class Player:
                         self.dy = 0
                     if tile_rect.colliderect(self.wall_hitbox.x+self.dx, self.wall_hitbox.y, self.width-20, 35):
                         self.dx = 0
+                for coin in self.level.coins:
+                    if self.rect.colliderect(coin.coin_hitbox):
+                        self.current_coins_amount += 1
+                        coin.kill()  
+
+        # display number of coins  
+        self.show_number_of_coins()        
         
         self.rect.x += self.dx
         self.rect.y += self.dy
@@ -214,6 +233,15 @@ class Player:
         
         screen.blit(self.idle_animation_list[self.frame], (self.rect.x - offset_x, self.rect.y - offset_y))
         # pygame.draw.rect(screen, 'white', (self.wall_hitbox.x-offset_x, self.wall_hitbox.y - offset_y, self.width-20, 35), 2)
+
+    def show_number_of_coins(self):
+        frame = pygame.transform.scale_by(pygame.image.load('img/coin_frame.png'), 3)
+        coin_image = pygame.transform.scale_by(pygame.image.load('img/coin.png'), 4)
+        coin_text = font.render(str(self.current_coins_amount), True, (255,255,255))
+
+        screen.blit(frame, (10, 10))
+        screen.blit(coin_image, (20, 15))
+        screen.blit(coin_text, (95, 20))
 
 class SpriteSheet:
     def __init__(self, image):
@@ -232,3 +260,21 @@ class Tile(pygame.sprite.Sprite):
         self.name = name
         self.image = surf
         self.rect = self.image.get_rect(topleft = pos)
+
+class Coin(pygame.sprite.Sprite):
+    def __init__(self, pos, surf, groups, name):
+        super().__init__(groups)
+        self.name = name
+        self.image = surf
+        self.rect = self.image.get_rect(topleft=pos)
+        self.rect.width = 25
+        self.rect.height = 25
+        self.coin_hitbox = pygame.Rect(pos[0]+25, pos[1]+25, self.rect.width, self.rect.height)
+
+    def update(self, offset_x, offset_y):
+        screen.blit(self.image, (self.rect.x-offset_x, self.rect.y-offset_y))
+        ### draw position rect
+        # pygame.draw.rect(screen, 'white', (self.rect.x-offset_x, self.rect.y-offset_y, self.rect.width, self.rect.height), 1)
+        ### draw coin hitbox rect
+        # pygame.draw.rect(screen, 'red', (self.coin_hitbox.x-offset_x, self.coin_hitbox.y-offset_y, self.coin_hitbox.width, self.coin_hitbox.height), 1)
+
