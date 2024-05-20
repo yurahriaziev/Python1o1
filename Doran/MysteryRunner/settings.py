@@ -29,6 +29,9 @@ inner_bottom_left = pygame.image.load('img/corners/inner-bottom-l-corner.png')
 inner_bottom_right = pygame.image.load('img/corners/inner-bottom-r-corner.png')
 inner_top_right = pygame.image.load('img/corners/inner-top-r-corner.png')
 
+pygame.font.init()
+font = pygame.font.Font('PressStart2P-Regular.ttf', 30)
+
 level1 = load_pygame('level1.tmx')
 layers = level1.layers
 walls = level1.get_layer_by_name('walls')
