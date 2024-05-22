@@ -182,6 +182,7 @@ def draw_frame():
 def choose_plr_screen():
     run = True
     player_option = 'blue'
+    outline = None
     while run:
         screen.fill((255,255,255))
 
@@ -189,17 +190,21 @@ def choose_plr_screen():
         red_btn = Button('red_plr_btn', 570, 200)
 
         play_btn = Button('play_btn', 360, 550)
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
 
             if event.type == pygame.MOUSEBUTTONDOWN and blue_btn.clicked():
                 player_option = 'blue'
+                outline = pygame.Rect(blue_btn.rect.x - 10, blue_btn.rect.y - 10, blue_btn.rect.width + 20, blue_btn.rect.height + 20)
             if event.type == pygame.MOUSEBUTTONDOWN and red_btn.clicked():
-                    player_option = 'red'
-            if event.type == pygame.MOUSEBUTTONDOWN and play_btn.clicked():
+                player_option = 'red'
+                outline = pygame.Rect(red_btn.rect.x - 10, red_btn.rect.y - 10, red_btn.rect.width + 20, red_btn.rect.height + 20)
+            if event.type == pygame.MOUSEBUTTONDOWN and play_btn.clicked() and outline:
                 play_screen(player_option)
+
+        if outline:
+            pygame.draw.rect(screen, 'black', outline, 10)
         pygame.display.update()
 
     pygame.quit()
@@ -219,7 +224,7 @@ def start_screen(player_option):
             if event.type == pygame.QUIT:
                 run = False
             if event.type == pygame.MOUSEBUTTONDOWN and choose_player_btn.clicked():
-                pass
+                choose_plr_screen()
             if event.type == pygame.MOUSEBUTTONDOWN and play_btn.clicked():
                 play_screen(player_option)
 
