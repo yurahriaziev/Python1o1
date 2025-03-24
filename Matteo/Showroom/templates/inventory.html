@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Cars</title>
+</head>
+<body>
+
+    <h2>Our Cars</h2>
+
+    <form method="GET" action="{{ url_for('inventory') }}">
+        <input type="text" name="search" placeholder="Search by make, model, or color" value="{{ search_query }}">
+        <!-- new -->
+        <input type="number" name="max_price" placeholder="Max Price" value="{{ max_price }}" min="0">
+        <button type="submit">Search</button>
+    </form>
+
+    <div id="car-list">
+        {% if cars %}
+            {% for car in cars %}
+                <div class="car-container">
+                    <p><a href="{{ url_for('car_details', car_id=car['id']) }}">{{ car['make'] }} {{ car['model'] }}</a></p>
+                    <p>Price: ${{ car.price }}</p>
+                    <p>Color: {{ car.color }}</p>
+
+                    <div class="slideshow-container">
+                        <img id="car-{{ loop.index }}" src="{{ url_for('static', filename='images/' + car.pictures[0]) }}" width="300">
+                        <button onclick="nextImage({{ loop.index }}, {{ car.pictures | length }})">Next</button>
+                    </div>
+                </div>
+                <hr>
+            {% endfor %}
+        {% else %}
+            <p>No cars found matching your search.</p>
+        {% endif %}
+    </div>
+
+    <script>
+        let imageIndexes = {};
+
+        function nextImage(carIndex, totalImages) {
+            if (!imageIndexes[carIndex]) {
+                imageIndexes[carIndex] = 0;
+            }
+
+            imageIndexes[carIndex] = (imageIndexes[carIndex] + 1) % totalImages;
+            
+            let imgElement = document.getElementById("car-" + carIndex);
+            
+            let imagePaths = {{ cars | tojson }};
+            imgElement.src = "/static/images/" + imagePaths[carIndex - 1].pictures[imageIndexes[carIndex]];
+        }
+    </script>
+
+</body>
+</html>
