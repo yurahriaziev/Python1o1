@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<body> 
+    <header>
+        <ul>
+            <li><a href="{{url_for('homepage')}}">Home</a></li>
+            <li><a href="{{url_for('inventory')}}">Inventory</a></li>
+            <li><a href="{{url_for('locations')}}">Locations</a></li>
+            <li><a href="{{url_for('new_car')}}">Add Car</a></li>
+        </ul>
+    </header>
+    <h1>Inventory</h1>
+    <form action="{{url_for('inventory')}}" method="get">
+        <input type="text" name="search" placeholder="Search car by make, model, or color" value="{{search_query}}">
+        <input type="number" name="budget" placeholder="Put your budget here" value="{{budget}}" min="0">
+        <button type="submit"> Submit</button>
+    </form>
+    {% for car in cars %}
+        <div>
+            <!-- <h3>{{ car.make }} {{ car.model }}</h3> -->
+            <p><a href="{{url_for('car',car_id=car['id'])}}">{{car['make']}} {{car['model']}}</a></p>
+            <!-- <p> color: {{ car.color }} </p> -->
+            <p>Color: <span style="display: inline-block; width: 20px; height: 20px; background-color:{{car.color}}; border: 1px solid #000;"></span></p>
+            <p> price:  {{car.price}}  </p>
+            <div>
+                <img id="car-{{loop.index}}" src="{{ url_for('static',filename='images/'+car.pictures[0])}}" alt="car-img,"width='300'>
+                <button onclick="nextImage({{loop.index}},{{car.pictures | length}})">Next</button>
+            </div>
+        </div>
+    {% endfor %}
+    <script>
+        let imageIndexes = {};
+
+        function nextImage(carIndex, totalImages) {
+            if (!imageIndexes[carIndex]) {
+                imageIndexes[carIndex] = 0;
+            }
+
+            imageIndexes[carIndex] = (imageIndexes[carIndex] + 1) % totalImages;
+            let imgElement = document.getElementById("car-" + carIndex);
+            
+            let imagePaths = {{ cars | tojson }};
+            imgElement.src = "/static/images/" + imagePaths[carIndex - 1].pictures[imageIndexes[carIndex]];
+        }
+    </script>
+</body>

@@ -1,0 +1,26 @@
+<html>
+    <body>
+        <h1>
+            Add a new car
+        </h1>
+        <form action="{{ url_for('new_car')}}" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" required>
+            <button type="submit">New car</button>
+            <label for="make">Make</label>
+            <input type="text" id="make" name="make" required>
+
+            <label for="model">Model</label>
+            <input type="text" id="model" name="model" required>
+
+            <label for="price">Price</label>
+            <input type="text" id="price" name="price" required>
+
+            <label for="color">Color</label>
+            <input type="color" id="color" name="color" required>
+
+            <label for="year">Year</label>
+            <input type="text" id="year" name="year" required>
+
+        </form>
+    </body>
+</html>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<body>
+    <header>
+        <ul>
+            <li><a href="{{url_for('homepage')}}">Home</a></li>
+            <li><a href="{{url_for('inventory')}}">Inventory</a></li>
+            <li><a href="{{url_for('locations')}}">Locations</a></li>
+            <li><a href="{{url_for('new_car')}}">Add Car</a></li>
+            <li><a href="{{url_for('signup')}}">Sign up</a></li>
+            <li><a href="{{url_for('login')}}">Login</a></li>
+        </ul>
+    </header>
+    <h1> Matteo's Showroom</h1>
+    <h2>Gallery</h2>
+    {%for car in cars_info %}
+        <div>
+            <img src="{{ url_for('static', filename='images/'+car['picture'])}}" alt="{{car_name}}" style="width: 200px;">
+            <p>
+                <a href="{{url_for('car',car_id=car['id'])}}">{{car['make']}} {{car['model']}}</a>
+            </p>
+        </div>
+    {%endfor%}
+</body>
